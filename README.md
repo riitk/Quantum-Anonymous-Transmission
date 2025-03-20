@@ -1,74 +1,72 @@
-# Quantum-Anonymous-Transmission
-Quantum Anonymous Transmission Using Qiskit
+# Quantum Anonymous Transmission Using GHZ States in Qiskit
 
-# Quantum Teleportation with GHZ States
+## Introduction
 
-## Overview
+Quantum anonymous transmission (QAT) is a communication protocol where a sender can transmit information anonymously using quantum entanglement. The key concept is that no single participant can determine who sent the message, ensuring **privacy** and **security** through quantum mechanics. GHZ (Greenberger–Horne–Zeilinger) states play a crucial role in enabling this protocol.
 
-This repository contains an implementation of quantum teleportation using GHZ (Greenberger-Horne-Zeilinger) states with Qiskit. The code demonstrates how to create entangled quantum states across multiple qubits and use them to transmit quantum information.
+This document explains the theory behind QAT using GHZ states, how the sender remains anonymous, and how to interpret the output.
 
-## Theory
+## Theoretical Background
 
-### GHZ States
+### 1. GHZ States and Their Role
+A **GHZ state** is a maximally entangled quantum state shared among multiple participants. For `N` qubits, the GHZ state is:
 
-GHZ states are maximally entangled quantum states involving three or more qubits. For an n-qubit system, the GHZ state is represented as:
+$$ |GHZ\rangle = \frac{1}{\sqrt{2}} ( |00...0\rangle + |11...1\rangle ) $$
 
-|GHZ⟩ = (|00...0⟩ + |11...1⟩)/√2
+These states exhibit **nonlocal correlations**, meaning measurement of one qubit influences all others, even at a distance. This property is essential for secure and anonymous quantum communication.
 
-These states exhibit perfect correlations: when measuring all qubits in the same basis, we either get all 0s or all 1s.
+GHZ states enable **quantum superposition of all participants**, meaning that from an external perspective, no single participant can be distinguished as the sender. The entanglement ensures that only when all participants collaborate can they extract useful information.
 
-### Quantum Communication Protocol
+### 2. Quantum Anonymous Transmission (QAT)
+In QAT, a sender encodes a classical bit (`0` or `1`) into a GHZ state without revealing their identity. This is achieved by leveraging entanglement and the symmetry of GHZ states. Any participant in the network could have sent the message, but no one can determine the exact sender.
 
-This implementation focuses on a quantum communication protocol using GHZ states where:
+#### How Anonymity is Preserved
+- The GHZ state is **symmetrically shared** among all participants.
+- The sender encodes a message by applying a **Pauli-Z operation** without altering the entanglement structure.
+- Since **all participants share the same entangled state**, no single measurement reveals the sender’s identity.
+- Only collective analysis of measurement outcomes determines the message while maintaining sender anonymity.
 
-1. A GHZ state is created across N qubits
-2. A sender encodes a classical bit (0 or 1) into the quantum state
-3. All participants apply Hadamard gates to decode the message
-4. Measurement results reveal which participant was the sender and what message was sent
+### 3. Encoding and Decoding in QAT
+- **Encoding:** If the sender wants to transmit `0`, they do nothing. If they want to send `1`, they apply a **Pauli-Z gate** to their qubit. This introduces a phase shift, but does not break the entanglement.
+- **Decoding:** All participants apply a **Hadamard gate (H)** before measurement. The collective measurement reveals whether the message is `0` or `1` but does not expose the sender.
 
-The key quantum phenomena utilized:
+The Hadamard transformation ensures that measurement results remain probabilistically distributed across participants while preserving the encoded information.
 
-- **Quantum Entanglement**: The non-local correlations between entangled qubits
-- **Quantum Superposition**: The ability of quantum systems to exist in multiple states simultaneously
-- **Phase Kickback**: How operations on one qubit can affect the global phase of an entangled system
+## Interpreting the Output
+When the circuit is executed and measured, the output bitstrings must be analyzed as follows:
 
-### Mathematical Explanation
+- **If the data bit is `0`** → The number of `1`s in the measurement results will be **even**.
+- **If the data bit is `1`** → The number of `1`s in the measurement results will be **odd**.
 
-Starting with an N-qubit system in state |00...0⟩, applying a Hadamard gate to the first qubit and CNOT gates to the rest creates the GHZ state:
+### Why This Works
+The even-odd pattern results from quantum interference and the entanglement properties of the GHZ state. Applying the **Hadamard transformation** redistributes the phase shifts introduced during encoding, leading to a measurable parity-based distinction without revealing individual actions.
 
-(|00...0⟩ + |11...1⟩)/√2
+## Implementation in Qiskit
+To implement QAT in **Qiskit**, follow these steps:
 
-When the sender applies a Z gate to encode a "1":
-- If the sender applies Z to their qubit: (|00...0⟩ - |11...1⟩)/√2
-- If the sender doesn't apply any gate (to encode "0"): (|00...0⟩ + |11...1⟩)/√2
+1. **Create a GHZ state** by applying a Hadamard gate to the first qubit and a chain of CNOT gates.
+2. **Encode the data bit** by applying a Pauli-Z gate if the bit is `1`.
+3. **Decode the state** using Hadamard gates on all qubits.
+4. **Measure all qubits** and analyze the results.
 
-After all participants apply Hadamard gates:
-- For data=0: All participants measure the same value (all 0s or all 1s)
-- For data=1: The sender's measurement will be the opposite of all other participants
+## Conclusion
+Quantum anonymous transmission allows secure, sender-anonymous communication using the entanglement properties of GHZ states. By leveraging quantum superposition and measurement correlations, participants can detect messages without revealing the sender's identity. The use of GHZ states ensures that the system remains secure against interception and sender identification, contributing to the development of quantum-secure communication networks.
 
-## Code Structure
+---
 
-The code is organized into several functions:
+## 🤝 Contributing
+Feel free to submit issues or pull requests if you find improvements!
 
-- `create_ghz()`: Creates an N-qubit GHZ state
-- `encode_data()`: Encodes a classical bit into the quantum state
-- `decoding()`: Applies Hadamard gates to decode the message
-- `measurement()`: Measures all qubits in the computational basis
-- `create_circuit()`: Combines all steps into a complete circuit
-- `execute()`: Runs the quantum circuit on a simulator
+## 📜 References
+- Qiskit Documentation: [https://qiskit.org/documentation/](https://qiskit.org/documentation/)
+- Nielsen & Chuang, "Quantum Computation and Quantum Information"
+- M. A. Nielsen, I. L. Chuang, "Quantum Information Theory"
+- Research papers on GHZ states and quantum anonymous transmission
+- Bennett, Brassard, Crepeau, Skubiszewska, "Generalized Quantum Cryptography"
+- Hillery, Bužek, Berthiaume, "Quantum Secret Sharing"
 
-## Usage
+## 📜 License
+This project is open-source under the MIT License.
 
-```python
-# Set parameters
-number_of_clients = 5  # Number of qubits in the GHZ state
-sender = 2             # Index of the sender (0 to number_of_clients-1)
-data = 1               # Data bit to encode (0 or 1)
-shots = 1024           # Number of times to run the circuit
-
-# Create and run the circuit
-qc = create_circuit(number_of_clients, sender, data)
-qc.draw("mpl")         # Visualize the circuit
-results = execute(qc, shots)
-counts = results.get_counts()
-plot_histogram(counts) # Visualize the results
+---
+Happy coding with **Qiskit!** 🚀
