@@ -61,12 +61,9 @@ Feel free to submit issues or pull requests if you find improvements!
 - Qiskit Documentation: [https://qiskit.org/documentation/](https://qiskit.org/documentation/)
 - Nielsen & Chuang, "Quantum Computation and Quantum Information"
 - M. A. Nielsen, I. L. Chuang, "Quantum Information Theory"
-- Research papers on GHZ states and quantum anonymous transmission
 - Bennett, Brassard, Crepeau, Skubiszewska, "Generalized Quantum Cryptography"
 - Hillery, Bužek, Berthiaume, "Quantum Secret Sharing"
 
 ## 📜 License
 This project is open-source under the MIT License.
 
----
-Happy coding with **Qiskit!** 🚀
